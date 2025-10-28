@@ -384,6 +384,7 @@
             }
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -574,6 +575,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Test Paneli Yüklendi');
             
+            // Dashboard butonunu ekle
+            addDashboardButton();
+            
             // İşletim Sistemi Butonları
             const osButtons = document.querySelectorAll('.os-btn');
             console.log('İşletim Sistemi Butonları:', osButtons.length);
@@ -728,6 +732,9 @@
                     // Test verilerini Netlify'a gönder
                     submitTestToNetlify();
                     
+                    // Ekran görüntüsü al ve dashboard'a kaydet
+                    takeScreenshot();
+                    
                     // Sonuçları göster
                     testSection.classList.add('hidden');
                     resultsSection.classList.remove('hidden');
@@ -774,6 +781,27 @@
                 iosGroup.style.display = 'none';
             }
         });
+
+        // Dashboard butonunu ekle
+        function addDashboardButton() {
+            const dashboardBtn = document.createElement('button');
+            dashboardBtn.textContent = '📊 Dashboard';
+            dashboardBtn.style.position = 'fixed';
+            dashboardBtn.style.top = '20px';
+            dashboardBtn.style.right = '20px';
+            dashboardBtn.style.zIndex = '1000';
+            dashboardBtn.style.padding = '10px 15px';
+            dashboardBtn.style.background = '#28a745';
+            dashboardBtn.style.color = 'white';
+            dashboardBtn.style.border = 'none';
+            dashboardBtn.style.borderRadius = '5px';
+            dashboardBtn.style.cursor = 'pointer';
+            dashboardBtn.style.fontSize = '14px';
+            dashboardBtn.onclick = function() {
+                window.location.href = 'dashboard.html';
+            };
+            document.body.appendChild(dashboardBtn);
+        }
 
         // Test listesi oluşturma
         function createTestList() {
@@ -980,6 +1008,112 @@
             console.log('📱 Local storage\'a kaydedildi:', key);
         }
 
+        // Ekran görüntüsü al ve dashboard'a kaydet
+        async function takeScreenshot() {
+            try {
+                // Test konteynerini hazırla
+                const testContainer = document.createElement('div');
+                testContainer.id = 'screenshot-container';
+                testContainer.style.position = 'absolute';
+                testContainer.style.left = '-9999px';
+                testContainer.style.top = '0';
+                testContainer.style.width = '800px';
+                testContainer.style.background = 'white';
+                testContainer.style.padding = '20px';
+                testContainer.style.color = 'black';
+                document.body.appendChild(testContainer);
+
+                testContainer.innerHTML = `
+                    <div style="padding: 20px; background: white; color: black; border: 2px solid #333;">
+                        <h1 style="color: #333; border-bottom: 2px solid #333; padding-bottom: 10px;">Test Raporu - ${testInfo.testerName}</h1>
+                        <p><strong>Cihaz:</strong> ${testInfo.deviceModel}</p>
+                        <p><strong>İşletim Sistemi:</strong> ${testInfo.operatingSystem}</p>
+                        <p><strong>Şablon:</strong> ${testInfo.template}</p>
+                        <p><strong>Tarih:</strong> ${new Date().toLocaleString('tr-TR')}</p>
+                        
+                        <h2 style="color: #333; margin-top: 20px;">Test Sonuçları</h2>
+                        ${testResults.map((result, index) => `
+                            <div style="margin: 10px 0; padding: 10px; border-left: 4px solid ${
+                                result.status === 'success' ? '#28a745' : 
+                                result.status === 'failed' ? '#dc3545' : '#ffc107'
+                            };">
+                                <strong>${index + 1}. ${result.stage}</strong> - 
+                                ${result.status === 'success' ? '✅ Başarılı' : 
+                                  result.status === 'failed' ? '❌ Başarısız' : '⏱️ Bekliyor'}
+                                ${result.timestamp ? ` (${result.timestamp})` : ''}
+                            </div>
+                        `).join('')}
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px; border: 1px solid #ddd;">
+                            <h3 style="color: #333;">Özet</h3>
+                            <p><strong>Toplam Test:</strong> ${testResults.length}</p>
+                            <p><strong>Başarılı:</strong> ${testResults.filter(r => r.status === 'success').length}</p>
+                            <p><strong>Başarısız:</strong> ${testResults.filter(r => r.status === 'failed').length}</p>
+                            <p><strong>Başarı Oranı:</strong> ${testResults.length > 0 ? 
+                                ((testResults.filter(r => r.status === 'success').length / testResults.length) * 100).toFixed(1) + '%' : '0%'
+                            }</p>
+                        </div>
+                    </div>
+                `;
+
+                const canvas = await html2canvas(testContainer, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff'
+                });
+
+                // Canvas'tan resmi indir
+                const link = document.createElement('a');
+                link.download = `test-raporu-${testInfo.testerName}-${new Date().getTime()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+
+                // Dashboard'a veri kaydet
+                saveToDashboard(canvas.toDataURL('image/png'));
+
+                // Temizlik
+                document.body.removeChild(testContainer);
+
+            } catch (error) {
+                console.error('Ekran görüntüsü alınamadı:', error);
+                // Hata olsa bile veriyi kaydet
+                saveToDashboard();
+            }
+        }
+
+        // Dashboard'a test sonuçlarını kaydet
+        function saveToDashboard(screenshotData = null) {
+            const dashboardResults = JSON.parse(localStorage.getItem('testResults') || '[]');
+            
+            const total = testResults.length;
+            const passed = testResults.filter(r => r.status === 'success').length;
+            const failed = testResults.filter(r => r.status === 'failed').length;
+            
+            const result = {
+                id: Date.now(),
+                timestamp: new Date().toLocaleString('tr-TR'),
+                tests: {
+                    total: total,
+                    passed: passed,
+                    failed: failed,
+                    successRate: total > 0 ? ((passed / total) * 100).toFixed(1) + '%' : '0%'
+                },
+                testerInfo: {
+                    name: testInfo.testerName,
+                    device: testInfo.deviceModel,
+                    os: testInfo.operatingSystem,
+                    template: testInfo.template
+                },
+                screenshot: screenshotData,
+                errors: testResults.filter(r => r.status === 'failed').map(r => r.stage)
+            };
+            
+            dashboardResults.unshift(result);
+            localStorage.setItem('testResults', JSON.stringify(dashboardResults));
+            console.log('📊 Dashboard verisi kaydedildi');
+        }
+
         // CSV indirme
         function downloadCSV() {
             let csvContent = "Test Raporu\n\n";
@@ -1046,162 +1180,5 @@
             }
         });
     </script>
-	// === DASHBOARD İÇİN EKLENECEK KODLAR - EN SONA EKLEYİN ===
-
-// Test konteyneri oluştur (ekran görüntüsü için)
-function createTestContainer() {
-    let testContainer = document.getElementById('test-container');
-    if (!testContainer) {
-        testContainer = document.createElement('div');
-        testContainer.id = 'test-container';
-        testContainer.style.position = 'absolute';
-        testContainer.style.left = '-9999px';
-        testContainer.style.top = '0';
-        document.body.appendChild(testContainer);
-    }
-    return testContainer;
-}
-
-// Test sonuçlarını dashboard için kaydet
-function saveToDashboard(screenshotData = null) {
-    const testResults = JSON.parse(localStorage.getItem('testResults') || '[]');
-    
-    const total = testResults.length;
-    const passed = testResults.filter(r => r.status === 'success').length;
-    const failed = testResults.filter(r => r.status === 'failed').length;
-    
-    const result = {
-        id: Date.now(),
-        timestamp: new Date().toLocaleString('tr-TR'),
-        tests: {
-            total: total,
-            passed: passed,
-            failed: failed,
-            successRate: total > 0 ? ((passed / total) * 100).toFixed(1) + '%' : '0%'
-        },
-        testerInfo: {
-            name: testInfo.testerName,
-            device: testInfo.deviceModel,
-            os: testInfo.operatingSystem,
-            template: testInfo.template
-        },
-        screenshot: screenshotData,
-        errors: testResults.filter(r => r.status === 'failed').map(r => r.stage)
-    };
-    
-    testResults.unshift(result);
-    localStorage.setItem('testResults', JSON.stringify(testResults));
-    console.log('📊 Dashboard verisi kaydedildi');
-}
-
-// Ekran görüntüsü al ve kaydet
-async function takeScreenshot() {
-    try {
-        // Test sonuçları bölümünü göster
-        const resultsSection = document.getElementById('resultsSection');
-        const originalDisplay = resultsSection.style.display;
-        resultsSection.style.display = 'block';
-        
-        // Test konteynerini hazırla
-        const testContainer = createTestContainer();
-        testContainer.innerHTML = `
-            <div style="padding: 20px; background: white; color: black;">
-                <h1>Test Raporu - ${testInfo.testerName}</h1>
-                <p><strong>Cihaz:</strong> ${testInfo.deviceModel}</p>
-                <p><strong>İşletim Sistemi:</strong> ${testInfo.operatingSystem}</p>
-                <p><strong>Şablon:</strong> ${testInfo.template}</p>
-                <p><strong>Tarih:</strong> ${new Date().toLocaleString('tr-TR')}</p>
-                
-                <h2>Test Sonuçları</h2>
-                ${testResults.map((result, index) => `
-                    <div style="margin: 10px 0; padding: 10px; border-left: 4px solid ${
-                        result.status === 'success' ? '#28a745' : 
-                        result.status === 'failed' ? '#dc3545' : '#ffc107'
-                    };">
-                        <strong>${index + 1}. ${result.stage}</strong> - 
-                        ${result.status === 'success' ? '✅ Başarılı' : 
-                          result.status === 'failed' ? '❌ Başarısız' : '⏱️ Bekliyor'}
-                        ${result.timestamp ? ` (${result.timestamp})` : ''}
-                    </div>
-                `).join('')}
-                
-                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
-                    <h3>Özet</h3>
-                    <p><strong>Toplam Test:</strong> ${testResults.length}</p>
-                    <p><strong>Başarılı:</strong> ${testResults.filter(r => r.status === 'success').length}</p>
-                    <p><strong>Başarısız:</strong> ${testResults.filter(r => r.status === 'failed').length}</p>
-                    <p><strong>Başarı Oranı:</strong> ${testResults.length > 0 ? 
-                        ((testResults.filter(r => r.status === 'success').length / testResults.length) * 100).toFixed(1) + '%' : '0%'
-                    }</p>
-                </div>
-            </div>
-        `;
-        
-        const canvas = await html2canvas(testContainer, {
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            backgroundColor: '#ffffff'
-        });
-        
-        // Canvas'tan resmi indir
-        const link = document.createElement('a');
-        link.download = `test-raporu-${testInfo.testerName}-${new Date().getTime()}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        
-        // Dashboard'a veri kaydet
-        saveToDashboard(canvas.toDataURL('image/png'));
-        
-        // Orijinal display değerine geri dön
-        resultsSection.style.display = originalDisplay;
-        
-    } catch (error) {
-        console.error('Ekran görüntüsü alınamadı:', error);
-        // Hata olsa bile veriyi kaydet
-        saveToDashboard();
-    }
-}
-
-// Test bitiş butonunu güncelle
-if (finishTestBtn) {
-    // Önce mevcut event listener'ı kaldır
-    finishTestBtn.replaceWith(finishTestBtn.cloneNode(true));
-    
-    // Yeni event listener ekle
-    document.getElementById('finishTestBtn').addEventListener('click', function() {
-        // Test verilerini Netlify'a gönder
-        submitTestToNetlify();
-        
-        // Ekran görüntüsü al
-        setTimeout(takeScreenshot, 500);
-        
-        // Sonuçları göster
-        testSection.classList.add('hidden');
-        resultsSection.classList.remove('hidden');
-        displayResults();
-    });
-}
-
-// Dashboard butonunu ekle
-const dashboardBtn = document.createElement('button');
-dashboardBtn.textContent = '📊 Dashboard';
-dashboardBtn.style.position = 'fixed';
-dashboardBtn.style.top = '20px';
-dashboardBtn.style.right = '20px';
-dashboardBtn.style.zIndex = '1000';
-dashboardBtn.style.padding = '10px 15px';
-dashboardBtn.style.background = '#28a745';
-dashboardBtn.style.color = 'white';
-dashboardBtn.style.border = 'none';
-dashboardBtn.style.borderRadius = '5px';
-dashboardBtn.style.cursor = 'pointer';
-dashboardBtn.style.fontSize = '14px';
-dashboardBtn.onclick = function() {
-    window.location.href = 'dashboard.html';
-};
-document.body.appendChild(dashboardBtn);
-
-console.log('🚀 Dashboard özellikleri yüklendi!');
 </body>
 </html>
