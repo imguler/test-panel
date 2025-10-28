@@ -437,24 +437,24 @@
                     <div class="template-buttons">
                         <button class="template-btn active" data-template="full">
                             🔄 Tam Regresyon Testi
-                            <div style="font-size: 12px; opacity: 0.8;">183 Test - Tüm fonksiyonlar</div>
+                            <div style="font-size: 12px; opacity: 0.8;">45 Test - Tüm fonksiyonlar</div>
                         </button>
                         <button class="template-btn" data-template="smoke">
                             🚀 Smoke Test
-                            <div style="font-size: 12px; opacity: 0.8;">25 Test - Kritik fonksiyonlar</div>
+                            <div style="font-size: 12px; opacity: 0.8;">15 Test - Kritik fonksiyonlar</div>
                         </button>
                         <button class="template-btn" data-template="payment">
                             💳 Ödeme Testleri
-                            <div style="font-size: 12px; opacity: 0.8;">42 Test - Ödeme işlemleri</div>
+                            <div style="font-size: 12px; opacity: 0.8;">25 Test - Ödeme işlemleri</div>
                         </button>
                         <button class="template-btn" data-template="auth">
                             🔐 Giriş Testleri
-                            <div style="font-size: 12px; opacity: 0.8;">24 Test - Kullanıcı girişi</div>
+                            <div style="font-size: 12px; opacity: 0.8;">18 Test - Kullanıcı girişi</div>
                         </button>
                     </div>
                     <div class="template-info" id="templateInfo">
                         <strong>Tam Regresyon Testi seçildi</strong><br>
-                        Tüm uygulama fonksiyonlarını kapsayan 183 test senaryosu
+                        Tüm uygulama fonksiyonlarını kapsayan 45 test senaryosu
                     </div>
                 </div>
             </form>
@@ -634,19 +634,19 @@
                     const templates = {
                         full: { 
                             name: "Tam Regresyon Testi", 
-                            desc: "Tüm uygulama fonksiyonlarını kapsayan 183 test senaryosu" 
+                            desc: "Tüm uygulama fonksiyonlarını kapsayan 45 test senaryosu" 
                         },
                         smoke: { 
                             name: "Smoke Test", 
-                            desc: "Kritik uygulama fonksiyonlarını kontrol eden 25 test senaryosu" 
+                            desc: "Kritik uygulama fonksiyonlarını kontrol eden 15 test senaryosu" 
                         },
                         payment: { 
                             name: "Ödeme Testleri", 
-                            desc: "Ödeme işlemlerini kapsayan 42 test senaryosu" 
+                            desc: "Ödeme işlemlerini kapsayan 25 test senaryosu" 
                         },
                         auth: { 
                             name: "Giriş Testleri", 
-                            desc: "Kullanıcı giriş ve doğrulama işlemlerini kapsayan 24 test senaryosu" 
+                            desc: "Kullanıcı giriş ve doğrulama işlemlerini kapsayan 18 test senaryosu" 
                         }
                     };
                     
@@ -811,30 +811,115 @@
             
             const testTemplates = {
                 full: [
-                    "Uygulama Açılış", 
-                    "SMS Gönderimi", 
-                    "OTP Doğrulama", 
+                    "Uygulama Açılış Testi",
+                    "Splash Screen Kontrolü",
                     "Ana Sayfa Yükleme",
-                    "Ödeme İşlemi",
-                    "Sipariş Tamamlama"
+                    "Bottom Navigation Testi",
+                    "Profil Sayfası Yükleme",
+                    "Kategori Listesi",
+                    "Ürün Arama Testi",
+                    "Arama Sonuçları Filtreleme",
+                    "Ürün Detay Sayfası",
+                    "Sepete Ekleme İşlemi",
+                    "Sepet Görüntüleme",
+                    "Sepet Güncelleme",
+                    "Sepetten Ürün Silme",
+                    "Favorilere Ekleme",
+                    "Favoriler Listesi",
+                    "Favorilerden Kaldırma",
+                    "Kullanıcı Girişi Testi",
+                    "Şifre Doğrulama",
+                    "OTP Gönderimi",
+                    "OTP Doğrulama",
+                    "Şifre Sıfırlama",
+                    "Profil Bilgileri Güncelleme",
+                    "Adres Ekleme",
+                    "Adres Listesi",
+                    "Varsayılan Adres Belirleme",
+                    "Adres Silme",
+                    "Ödeme Yöntemi Ekleme",
+                    "Kart Doğrulama",
+                    "3D Secure Testi",
+                    "Ödeme İşlemi Tamamlama",
+                    "Sipariş Onayı",
+                    "Sipariş Takip Sayfası",
+                    "Sipariş Geçmişi",
+                    "Sipariş Detayları",
+                    "İade Talebi Oluşturma",
+                    "İade Takip",
+                    "Push Notification Testi",
+                    "SMS Bildirimi",
+                    "Email Bildirimi",
+                    "Dil Değiştirme Testi",
+                    "Tema Değiştirme (Dark/Light)",
+                    "Font Boyutu Ayarları",
+                    "Cache Temizleme",
+                    "Logout İşlemi",
+                    "Uygulama Kapanış Testi"
                 ],
                 smoke: [
-                    "Uygulama Açılış", 
-                    "Kullanıcı Girişi", 
-                    "Ana Sayfa",
-                    "Temel Navigasyon"
+                    "Uygulama Açılış Testi",
+                    "Ana Sayfa Yükleme",
+                    "Kullanıcı Girişi",
+                    "Ürün Arama Testi",
+                    "Sepete Ekleme İşlemi",
+                    "Ödeme İşlemi",
+                    "Sipariş Onayı",
+                    "Push Notification",
+                    "Profil Sayfası",
+                    "Favorilere Ekleme",
+                    "Adres Ekleme",
+                    "Kart Ekleme",
+                    "Logout İşlemi",
+                    "Uygulama Kapanış",
+                    "Tekrar Açılış Testi"
                 ],
                 payment: [
-                    "Ödeme Seçenekleri", 
-                    "Kart Doğrulama", 
-                    "3D Secure",
-                    "Ödeme Tamamlama"
+                    "Sepet Tutarı Hesaplama",
+                    "Kargo Ücreti Hesaplama",
+                    "Vergi Hesaplama",
+                    "Toplam Tutar Doğrulama",
+                    "Kredi Kartı Ekleme",
+                    "Kart Numarası Doğrulama",
+                    "Son Kullanma Tarihi Kontrolü",
+                    "CVV Doğrulama",
+                    "Kart Sahibi Doğrulama",
+                    "3D Secure Yönlendirme",
+                    "3D Secure Doğrulama",
+                    "Ödeme Onayı",
+                    "Ödeme Başarılı Bildirimi",
+                    "Sipariş Numarası Oluşturma",
+                    "SMS Bildirimi Gönderimi",
+                    "Email Onayı Gönderimi",
+                    "Sepet Temizleme",
+                    "Sipariş Geçmişi Güncelleme",
+                    "Stok Güncelleme",
+                    "Kullanıcı Bakiyesi Kontrolü",
+                    "Kupon Kodu Uygulama",
+                    "İndirim Hesaplama",
+                    "Nakit Ödeme Testi",
+                    "Havale/EFT Ödeme",
+                    "Tek Çekim/Kredi Kartı"
                 ],
                 auth: [
-                    "Telefon Numarası", 
-                    "SMS Gönder", 
+                    "Telefon Numarası Doğrulama",
+                    "SMS Gönderim Testi",
+                    "OTP Alma Testi",
                     "OTP Doğrulama",
-                    "Başarılı Giriş"
+                    "Başarılı Giriş",
+                    "Hatalı OTP Denemesi",
+                    "OTP Yeniden Gönderim",
+                    "OTP Süre Dolumu",
+                    "Şifre Doğrulama",
+                    "Şifre Sıfırlama Talebi",
+                    "Şifre Sıfırlama Maili",
+                    "Yeni Şifre Belirleme",
+                    "Çıkış Yapma Testi",
+                    "Session Kontrolü",
+                    "Token Yenileme",
+                    "Çoklu Cihaz Girişi",
+                    "Biometric Giriş Testi",
+                    "Face ID/Touch ID Testi"
                 ]
             };
             
