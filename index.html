@@ -252,7 +252,7 @@
         .test-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             padding: 15px;
             border-bottom: 1px solid #eee;
             margin-bottom: 10px;
@@ -341,6 +341,28 @@
             display: flex;
             gap: 10px;
             margin-top: 20px;
+        }
+
+        .notes-section, .screenshot-section {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .screenshot-preview {
+            max-width: 100px;
+            max-height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
         }
 
         @media (max-width: 768px) {
@@ -436,24 +458,24 @@
                     <div class="template-buttons">
                         <button class="template-btn active" data-template="full">
                             🔄 Tam Regresyon Testi
-                            <div style="font-size: 12px; opacity: 0.8;">183 Test - Tüm fonksiyonlar</div>
+                            <div style="font-size: 12px; opacity: 0.8;">30 Test - Tüm fonksiyonlar</div>
                         </button>
                         <button class="template-btn" data-template="smoke">
                             🚀 Smoke Test
-                            <div style="font-size: 12px; opacity: 0.8;">25 Test - Kritik fonksiyonlar</div>
+                            <div style="font-size: 12px; opacity: 0.8;">19 Test - Kritik fonksiyonlar</div>
                         </button>
                         <button class="template-btn" data-template="payment">
                             💳 Ödeme Testleri
-                            <div style="font-size: 12px; opacity: 0.8;">42 Test - Ödeme işlemleri</div>
+                            <div style="font-size: 12px; opacity: 0.8;">21 Test - Ödeme işlemleri</div>
                         </button>
                         <button class="template-btn" data-template="auth">
                             🔐 Giriş Testleri
-                            <div style="font-size: 12px; opacity: 0.8;">24 Test - Kullanıcı girişi</div>
+                            <div style="font-size: 12px; opacity: 0.8;">20 Test - Kullanıcı girişi</div>
                         </button>
                     </div>
                     <div class="template-info" id="templateInfo">
                         <strong>Tam Regresyon Testi seçildi</strong><br>
-                        Tüm uygulama fonksiyonlarını kapsayan 183 test senaryosu
+                        Tüm uygulama fonksiyonlarını kapsayan 30 test senaryosu
                     </div>
                 </div>
             </form>
@@ -531,6 +553,7 @@
                             <th>Test Aşaması</th>
                             <th>Durum</th>
                             <th>Notlar</th>
+                            <th>Ekran Görüntüsü</th>
                         </tr>
                     </thead>
                     <tbody id="resultsTableBody">
@@ -547,6 +570,120 @@
     </div>
 
     <script>
+        // Test şablonları - GENİŞLETİLMİŞ
+        const testTemplates = {
+            full: {
+                name: "Tam Regresyon Testi",
+                tests: [
+                    "Uygulama Açılış",
+                    "İlk açılışta splash screen görüntülenmesi", 
+                    "Uygulama yüklenme süresi (max 3-5 sn)",
+                    "İnternet bağlantısı olmadan açılış davranışı",
+                    "Farklı Android/iOS versiyonlarda açılış kontrolü",
+                    "Arka plandan geri dönüşte uygulama durumu korunması",
+                    "Telefon numarası giriş ekranının açılması",
+                    "Doğru formatta numara girişi (5XX XXX XX XX)",
+                    "Geçersiz telefon numarası formatında hata mesajı",
+                    "Telefon numarası girildiğinde 'SMS Gönder' butonunun aktif olması",
+                    "SMS gönder butonuna basıldığında başarı mesajı",
+                    "OTP ekranına geçiş",
+                    "SMS'in kullanıcıya ulaşması",
+                    "OTP kodunun otomatik olarak algılanması (SMS Auto-read)",
+                    "Manuel OTP kodu girişi",
+                    "6 haneli OTP kodu doğrulaması",
+                    "Doğru OTP kodu ile başarılı giriş",
+                    "Yanlış OTP kodu ile giriş engellenmesi ve hata mesajı",
+                    "OTP kodunun süresi dolduğunda uyarı mesajı",
+                    "'Kodu Tekrar Gönder' butonunun çalışması",
+                    "Tekrar kod gönderme için bekleme süresi countdown'u",
+                    "Maksimum deneme hakkı aşıldığında hesap bloklanması/uyarısı",
+                    "Yeni kullanıcı için otomatik kayıt oluşturulması",
+                    "Mevcut kullanıcı için direkt giriş yapılması",
+                    "Otomatik giriş yapma (Beni Hatırla) özelliği",
+                    "Ana sayfa yükleme ve kategori görüntüleme",
+                    "Ürün listeleme ve detay sayfası",
+                    "Sepete ürün ekleme/çıkarma",
+                    "Ödeme işlemleri",
+                    "Sipariş tamamlama"
+                ]
+            },
+            smoke: {
+                name: "Smoke Test", 
+                tests: [
+                    "Uygulama Açılış",
+                    "Uygulama yüklenme süresi kontrolü",
+                    "Telefon numarası giriş ekranı",
+                    "SMS gönder butonu çalışması", 
+                    "OTP doğrulama ekranı",
+                    "Başarılı giriş işlemi",
+                    "Ana sayfa yükleme",
+                    "Kategori görüntüleme",
+                    "Ürün listeleme",
+                    "Sepete ürün ekleme",
+                    "Sepet ikonu güncellemesi",
+                    "Adres seçimi",
+                    "Ödeme yöntemi seçimi", 
+                    "Sipariş onayı",
+                    "Sipariş tamamlanması",
+                    "Temel navigasyon testi",
+                    "Profil sayfası erişimi",
+                    "Sipariş geçmişi görüntüleme",
+                    "Çıkış işlemi"
+                ]
+            },
+            payment: {
+                name: "Ödeme Testleri",
+                tests: [
+                    "Ödeme seçenekleri listelenmesi",
+                    "Kapıda nakit ödeme seçeneği",
+                    "Kapıda kredi kartı ile ödeme", 
+                    "Online kredi kartı ekranı açılması",
+                    "Kart numarası validasyonu",
+                    "CVV ve son kullanma tarihi validasyonu",
+                    "3D Secure doğrulama sayfasına yönlendirme",
+                    "Başarılı ödeme sonrası onay ekranı",
+                    "Başarısız ödeme durumunda hata mesajı",
+                    "Kayıtlı kartlardan ödeme yapabilme",
+                    "Kart kaydetme seçeneği çalışması",
+                    "Paycell ödeme entegrasyonu",
+                    "TokenFlex ödeme entegrasyonu", 
+                    "Pluxee (Sodexo) ödeme seçeneği",
+                    "Setcard ödeme entegrasyonu",
+                    "Metropol kart ile ödeme",
+                    "Multinet ödeme entegrasyonu",
+                    "Edenred kart ile ödeme",
+                    "Yetersiz bakiye durumunda hata mesajı",
+                    "Ödeme sırasında bağlantı kopması senaryosu",
+                    "Ödeme timeout durumu testi"
+                ]
+            },
+            auth: {
+                name: "Giriş Testleri",
+                tests: [
+                    "Uygulama açılış kontrolü",
+                    "Telefon numarası giriş ekranı tasarımı",
+                    "Geçersiz numara formatında hata mesajı",
+                    "SMS gönder butonunun aktif/pasif durumu",
+                    "SMS gönderim başarı mesajı",
+                    "SMS ulaşım süresi kontrolü",
+                    "OTP otomatik algılama çalışması",
+                    "Manuel OTP kodu giriş alanı",
+                    "OTP doğrulama işlemi",
+                    "Başarılı giriş sonrası yönlendirme",
+                    "Yanlış OTP kodunda hata mesajı",
+                    "OTP süre kontrolü (2-3 dk)",
+                    "'Kodu Tekrar Gönder' butonu çalışması",
+                    "Countdown bekleme süresi (60 saniye)",
+                    "Maksimum deneme hakkı kontrolü",
+                    "Yeni kullanıcı kayıt işlemi",
+                    "Mevcut kullanıcı giriş işlemi", 
+                    "Otomatik giriş (Beni Hatırla) özelliği",
+                    "Çıkış ve tekrar giriş akışı",
+                    "Telefon numarası değiştirme akışı"
+                ]
+            }
+        };
+
         // DOM Elementleri
         const userInfoSection = document.getElementById('userInfoSection');
         const testSection = document.getElementById('testSection');
@@ -627,26 +764,7 @@
                     testInfo.template = templateId;
                     
                     // Şablon bilgilerini güncelle
-                    const templates = {
-                        full: { 
-                            name: "Tam Regresyon Testi", 
-                            desc: "Tüm uygulama fonksiyonlarını kapsayan 183 test senaryosu" 
-                        },
-                        smoke: { 
-                            name: "Smoke Test", 
-                            desc: "Kritik uygulama fonksiyonlarını kontrol eden 25 test senaryosu" 
-                        },
-                        payment: { 
-                            name: "Ödeme Testleri", 
-                            desc: "Ödeme işlemlerini kapsayan 42 test senaryosu" 
-                        },
-                        auth: { 
-                            name: "Giriş Testleri", 
-                            desc: "Kullanıcı giriş ve doğrulama işlemlerini kapsayan 24 test senaryosu" 
-                        }
-                    };
-                    
-                    const template = templates[templateId];
+                    const template = testTemplates[templateId];
                     const templateInfo = document.getElementById('templateInfo');
                     const currentTemplateName = document.getElementById('currentTemplateName');
                     const resultsTemplateName = document.getElementById('resultsTemplateName');
@@ -654,7 +772,7 @@
                     if (template && templateInfo) {
                         templateInfo.innerHTML = `
                             <strong>${template.name} seçildi</strong><br>
-                            ${template.desc}
+                            ${template.desc || template.tests.length + ' test senaryosu'}
                         `;
                     }
                     
@@ -775,46 +893,17 @@
             }
         });
 
-        // Test listesi oluşturma
+        // Test listesi oluşturma - EKRAN GÖRÜNTÜSÜ İLE
         function createTestList() {
             if (!testList) return;
             
             const activeTemplate = document.querySelector('.template-btn.active').getAttribute('data-template');
+            const template = testTemplates[activeTemplate];
             
-            const testTemplates = {
-                full: [
-                    "Uygulama Açılış", 
-                    "SMS Gönderimi", 
-                    "OTP Doğrulama", 
-                    "Ana Sayfa Yükleme",
-                    "Ödeme İşlemi",
-                    "Sipariş Tamamlama"
-                ],
-                smoke: [
-                    "Uygulama Açılış", 
-                    "Kullanıcı Girişi", 
-                    "Ana Sayfa",
-                    "Temel Navigasyon"
-                ],
-                payment: [
-                    "Ödeme Seçenekleri", 
-                    "Kart Doğrulama", 
-                    "3D Secure",
-                    "Ödeme Tamamlama"
-                ],
-                auth: [
-                    "Telefon Numarası", 
-                    "SMS Gönder", 
-                    "OTP Doğrulama",
-                    "Başarılı Giriş"
-                ]
-            };
-            
-            const tests = testTemplates[activeTemplate] || testTemplates.full;
             testResults = [];
             
             testList.innerHTML = '';
-            tests.forEach((test, index) => {
+            template.tests.forEach((test, index) => {
                 const testItem = document.createElement('div');
                 testItem.className = 'test-item';
                 testItem.innerHTML = `
@@ -827,6 +916,23 @@
                             <button class="status-btn btn-success" onclick="updateTestStatus(${index}, 'success')">Başarılı</button>
                             <button class="status-btn btn-danger" onclick="updateTestStatus(${index}, 'failed')">Başarısız</button>
                         </div>
+                        <div class="notes-section" id="notes-${index}" style="display: none;">
+                            <textarea class="notes-textarea" placeholder="Hata detayı veya notlarınızı buraya yazın..." 
+                                      oninput="updateTestNotes(${index}, this.value)"></textarea>
+                        </div>
+                        <div class="screenshot-section" id="screenshot-${index}" style="display: none;">
+                            <input type="file" id="screenshot-input-${index}" accept="image/*" style="display: none;" 
+                                   onchange="handleScreenshotUpload(${index}, this)">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('screenshot-input-${index}').click()" 
+                                    style="font-size: 12px; padding: 6px 12px; margin-right: 10px;">
+                                📸 Ekran Görüntüsü Ekle
+                            </button>
+                            <img id="screenshot-preview-${index}" class="screenshot-preview">
+                            <button type="button" class="btn-warning" onclick="removeScreenshot(${index})" 
+                                    style="font-size: 12px; padding: 6px 12px; display: none;" id="remove-screenshot-${index}">
+                                ❌ Kaldır
+                            </button>
+                        </div>
                     </div>
                 `;
                 testList.appendChild(testItem);
@@ -836,6 +942,7 @@
                     stage: test,
                     status: 'pending',
                     notes: '',
+                    screenshot: null,
                     timestamp: ''
                 });
             });
@@ -843,7 +950,42 @@
             updateStatistics();
         }
 
-        // Test durumu güncelleme
+        // Test notlarını güncelle
+        window.updateTestNotes = function(index, notes) {
+            testResults[index].notes = notes;
+        };
+
+        // Ekran görüntüsü yükleme
+        window.handleScreenshotUpload = function(index, input) {
+            const file = input.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    testResults[index].screenshot = e.target.result;
+                    const preview = document.getElementById(`screenshot-preview-${index}`);
+                    const removeBtn = document.getElementById(`remove-screenshot-${index}`);
+                    
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    removeBtn.style.display = 'inline-block';
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Ekran görüntüsü kaldırma
+        window.removeScreenshot = function(index) {
+            testResults[index].screenshot = null;
+            const preview = document.getElementById(`screenshot-preview-${index}`);
+            const removeBtn = document.getElementById(`remove-screenshot-${index}`);
+            const fileInput = document.getElementById(`screenshot-input-${index}`);
+            
+            preview.style.display = 'none';
+            removeBtn.style.display = 'none';
+            fileInput.value = '';
+        };
+
+        // Test durumu güncelleme - EKRAN GÖRÜNTÜSÜ İLE
         window.updateTestStatus = function(index, status) {
             testResults[index].status = status;
             testResults[index].timestamp = new Date().toLocaleString('tr-TR');
@@ -851,9 +993,24 @@
             const testItems = document.querySelectorAll('.test-item');
             const testItem = testItems[index];
             const statusSpan = testItem.querySelector('.status');
+            const notesSection = document.getElementById(`notes-${index}`);
+            const screenshotSection = document.getElementById(`screenshot-${index}`);
             
             statusSpan.textContent = status === 'success' ? 'Başarılı' : 'Başarısız';
             statusSpan.className = `status ${status === 'success' ? 'success' : 'failed'}`;
+            
+            // Başarısız durumda not ve ekran görüntüsü alanını göster
+            if (status === 'failed') {
+                notesSection.style.display = 'block';
+                screenshotSection.style.display = 'block';
+            } else {
+                notesSection.style.display = 'none';
+                screenshotSection.style.display = 'none';
+                // Başarılı durumda notları temizle
+                testResults[index].notes = '';
+                const textarea = notesSection.querySelector('textarea');
+                if (textarea) textarea.value = '';
+            }
             
             updateStatistics();
         };
@@ -880,7 +1037,7 @@
             if (progressFill) progressFill.style.width = `${progress}%`;
         }
 
-        // Sonuçları göster
+        // Sonuçları göster - EKRAN GÖRÜNTÜSÜ İLE
         function displayResults() {
             const resultsTableBody = document.getElementById('resultsTableBody');
             if (!resultsTableBody) return;
@@ -903,7 +1060,7 @@
             if (successRateElem) successRateElem.textContent = `${successRate}%`;
             if (resultsProgress) resultsProgress.style.width = `${successRate}%`;
             
-            // Tabloyu doldur
+            // Tabloyu doldur - EKRAN GÖRÜNTÜSÜ SÜTUNU EKLE
             resultsTableBody.innerHTML = '';
             testResults.forEach(result => {
                 const row = document.createElement('tr');
@@ -912,14 +1069,54 @@
                 const statusText = result.status === 'success' ? 'Başarılı' : 
                                  result.status === 'failed' ? 'Başarısız' : 'Bekliyor';
                 
+                const screenshotCell = result.screenshot ? 
+                    `<img src="${result.screenshot}" style="max-width: 80px; max-height: 60px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;" 
+                          onclick="openScreenshot('${result.screenshot}')" title="Büyütmek için tıklayın">` : 
+                    '-';
+                
                 row.innerHTML = `
                     <td>${result.stage}</td>
                     <td class="${statusClass}">${statusText}</td>
                     <td>${result.notes || '-'}</td>
+                    <td>${screenshotCell}</td>
                 `;
                 resultsTableBody.appendChild(row);
             });
         }
+
+        // Ekran görüntüsü büyütme
+        window.openScreenshot = function(src) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                cursor: pointer;
+            `;
+            
+            const enlargedImg = document.createElement('img');
+            enlargedImg.src = src;
+            enlargedImg.style.cssText = `
+                max-width: 90%;
+                max-height: 90%;
+                border: 2px solid white;
+                border-radius: 8px;
+            `;
+            
+            overlay.appendChild(enlargedImg);
+            overlay.addEventListener('click', function() {
+                document.body.removeChild(overlay);
+            });
+            
+            document.body.appendChild(overlay);
+        };
 
         // Netlify'a test verilerini gönder
         function submitTestToNetlify() {
@@ -990,13 +1187,14 @@
             csvContent += `Test Şablonu,${testInfo.template}\n\n`;
             
             csvContent += "Test Sonuçları\n";
-            csvContent += "No,Test Aşaması,Durum,Zaman Damgası\n";
+            csvContent += "No,Test Aşaması,Durum,Notlar,Ekran Görüntüsü,Zaman Damgası\n";
             
             testResults.forEach((result, index) => {
                 const statusText = result.status === 'success' ? 'Başarılı' : 
                                  result.status === 'failed' ? 'Başarısız' : 'Bekliyor';
+                const hasScreenshot = result.screenshot ? 'EVET' : 'HAYIR';
                 
-                csvContent += `${index + 1},${result.stage},${statusText},${result.timestamp}\n`;
+                csvContent += `${index + 1},"${result.stage}","${statusText}","${result.notes || ''}","${hasScreenshot}","${result.timestamp}"\n`;
             });
             
             const blob = new Blob([csvContent], { type: 'text/csv' });
