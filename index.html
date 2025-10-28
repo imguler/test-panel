@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Otomasyon Paneli - Online</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--dark-color), #1a2530);
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            border-radius: 12px 12px 0 0;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .online-status {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 5px solid #28a745;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.2);
+        }
+        
+        .online-status.offline {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border-left-color: #dc3545;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #eaeaea;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-success:hover {
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #c0392b);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn-danger:hover {
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #d35400);
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+        
+        .btn-warning:hover {
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(149, 165, 166, 0.4);
+        }
+
+        /* Mevcut CSS kodlarının devamı... */
+        /* Tüm önceki CSS kodlarını buraya ekle */
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧪 Test Otomasyon Paneli</h1>
+            <div class="subtitle">Online Veri Toplama Sistemi</div>
+        </header>
+        
+        <!-- Online Durum Göstergesi -->
+        <div id="onlineStatus" class="online-status">
+            <span id="statusText">🟢 Çevrimiçi - Veriler cloud'a kaydedilecek</span>
+            <div id="syncStatus" style="font-size: 12px; margin-top: 5px; opacity: 0.8;"></div>
+        </div>
+        
+        <div class="card" id="userInfoSection">
+            <h2>👤 Test Bilgileri</h2>
+            <div class="form-group">
+                <label for="testerName">Testi Yapan Kişi *</label>
+                <input type="text" id="testerName" placeholder="Adınızı ve soyadınızı girin" required>
+            </div>
+            
+            <div class="form-group">
+                <label>📱 İşletim Sistemi *</label>
+                <div class="os-selection">
+                    <button type="button" class="os-btn active" data-os="android">🤖 Android</button>
+                    <button type="button" class="os-btn" data-os="ios">🍎 iOS</button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="deviceModel">📟 Cihaz Modeli *</label>
+                <input type="text" id="deviceModel" placeholder="Ör: Samsung Galaxy S23, iPhone 15 Pro" required>
+            </div>
+            
+            <div class="form-group" id="androidVersionGroup">
+                <label for="androidVersion">🔢 Android Sürümü *</label>
+                <input type="text" id="androidVersion" placeholder="Ör: Android 14, One UI 6.0" required>
+            </div>
+            
+            <div class="form-group ios-specific" id="iosVersionGroup">
+                <label for="iosVersion">🔢 iOS Sürümü *</label>
+                <input type="text" id="iosVersion" placeholder="Ör: iOS 17.2">
+            </div>
+            
+            <div class="template-selector">
+                <label>🎯 Test Senaryosu Şablonu Seçin</label>
+                <div class="template-buttons">
+                    <button class="template-btn active" data-template="full">
+                        🔄 Tam Regresyon Testi
+                        <div style="font-size: 12px; opacity: 0.8;">183 Test - Tüm fonksiyonlar</div>
+                    </button>
+                    <button class="template-btn" data-template="smoke">
+                        🚀 Smoke Test
+                        <div style="font-size: 12px; opacity: 0.8;">25 Test - Kritik fonksiyonlar</div>
+                    </button>
+                    <button class="template-btn" data-template="payment">
+                        💳 Ödeme Testleri
+                        <div style="font-size: 12px; opacity: 0.8;">42 Test - Ödeme işlemleri</div>
+                    </button>
+                    <button class="template-btn" data-template="auth">
+                        🔐 Giriş Testleri
+                        <div style="font-size: 12px; opacity: 0.8;">24 Test - Kullanıcı girişi</div>
+                    </button>
+                </div>
+                <div class="template-info" id="templateInfo">
+                    <strong>Tam Regresyon Testi seçildi</strong><br>
+                    Tüm uygulama fonksiyonlarını kapsayan 183 test senaryosu
+                </div>
+            </div>
+            
+            <button id="startTestBtn" class="btn-success">🚀 Teste Başla</button>
+        </div>
+        
+        <!-- Test ve Sonuç bölümleri aynı şekilde devam edecek -->
+        <!-- Tüm önceki HTML kodunu buraya ekle -->
+
+    </div>
+
+    <script>
+        // NETLIFY FORM ENTEGRASYONU
+        const NETLIFY_FORM_NAME = "test-results";
+
+        // Online/Offline durum takibi
+        function updateOnlineStatus() {
+            const statusElement = document.getElementById('onlineStatus');
+            const statusText = document.getElementById('statusText');
+            const syncStatus = document.getElementById('syncStatus');
+            
+            if (navigator.onLine) {
+                statusElement.classList.remove('offline');
+                statusText.innerHTML = '🟢 ÇEVİRİMİÇİ - Veriler cloud\'a kaydedilecek';
+                syncStatus.innerHTML = 'Tüm veriler Netlify üzerinden merkeze iletilecek';
+                
+                // Çevrimiçi olunca bekleyen verileri gönder
+                setTimeout(syncPendingData, 1000);
+            } else {
+                statusElement.classList.add('offline');
+                statusText.innerHTML = '🔴 ÇEVİRİMDIŞI - Veriler local kaydedilecek';
+                syncStatus.innerHTML = 'İnternet bağlantısı sağlandığında otomatik senkronize edilecek';
+            }
+        }
+
+        // Netlify Form'a veri gönder
+        async function submitToNetlify(testData) {
+            if (!navigator.onLine) {
+                saveToLocalStorage(testData);
+                return false;
+            }
+
+            const formData = new URLSearchParams();
+            formData.append('form-name', NETLIFY_FORM_NAME);
+            formData.append('tester-name', testData.testerName);
+            formData.append('device-model', testData.deviceModel);
+            formData.append('os-type', testData.operatingSystem);
+            formData.append('os-version', testData.osVersion);
+            formData.append('test-template', testData.template);
+            formData.append('total-tests', testData.totalTests);
+            formData.append('passed-tests', testData.passedTests);
+            formData.append('failed-tests', testData.failedTests);
+            formData.append('success-rate', testData.successRate);
+            formData.append('test-results', JSON.stringify(testData.results));
+            formData.append('timestamp', new Date().toISOString());
+            formData.append('user-agent', navigator.userAgent);
+
+            try {
+                const response = await fetch('/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    console.log('✅ Netlify form submitted successfully');
+                    showNotification('✅ Test sonuçları cloud\'a kaydedildi!', 'success');
+                    return true;
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            } catch (error) {
+                console.error('❌ Netlify submission failed:', error);
+                saveToLocalStorage(testData);
+                showNotification('⚠️ Cloud kayıt başarısız, local kaydedildi', 'warning');
+                return false;
+            }
+        }
+
+        // Local Storage'a yedekle
+        function saveToLocalStorage(data) {
+            const timestamp = new Date().toISOString();
+            const key = `test_backup_${timestamp}`;
+            
+            // Backup bilgilerini de ekle
+            const backupData = {
+                ...data,
+                backupTimestamp: timestamp,
+                backupId: key
+            };
+            
+            localStorage.setItem(key, JSON.stringify(backupData));
+            
+            // Bekleyen veri sayısını göster
+            const pendingCount = Object.keys(localStorage)
+                .filter(k => k.startsWith('test_backup_')).length;
+            
+            showNotification(
+                `📱 Local kaydedildi (${pendingCount} bekleyen veri)`, 
+                'info'
+            );
+            
+            return key;
+        }
+
+        // Bekleyen verileri senkronize et
+        async function syncPendingData() {
+            if (!navigator.onLine) return;
+            
+            const pendingKeys = Object.keys(localStorage)
+                .filter(k => k.startsWith('test_backup_'));
+            
+            if (pendingKeys.length === 0) return;
+            
+            const syncStatus = document.getElementById('syncStatus');
+            syncStatus.innerHTML = `🔄 ${pendingKeys.length} bekleyen veri senkronize ediliyor...`;
+            
+            let successCount = 0;
+            
+            for (const key of pendingKeys) {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    const success = await submitToNetlify(data);
+                    
+                    if (success) {
+                        localStorage.removeItem(key);
+                        successCount++;
+                    }
+                    
+                    // API rate limit için bekle
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                } catch (error) {
+                    console.error(`Error syncing ${key}:`, error);
+                }
+            }
+            
+            if (successCount > 0) {
+                syncStatus.innerHTML = `✅ ${successCount} veri senkronize edildi`;
+                setTimeout(() => {
+                    syncStatus.innerHTML = 'Tüm veriler güncel';
+                }, 3000);
+            }
+        }
+
+        // Bildirim göster
+        function showNotification(message, type = 'info') {
+            // Basit bildirim sistemi
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10000;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                animation: slideIn 0.3s ease;
+            `;
+            
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+            } else if (type === 'warning') {
+                notification.style.background = 'linear-gradient(135deg, #ffc107, #fd7e14)';
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(135deg, #dc3545, #e83e8c)';
+            } else {
+                notification.style.background = 'linear-gradient(135deg, #17a2b8, #6f42c1)';
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 4000);
+        }
+
+        // CSS Animasyonları
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // EVENT LISTENER'lar
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        document.addEventListener('DOMContentLoaded', function() {
+            updateOnlineStatus();
+            // Sayfa yüklendiğinde bekleyen verileri kontrol et
+            setTimeout(syncPendingData, 2000);
+        });
+
+        // TEST BİTİŞİNDE ÇAĞIRILACAK FONKSİYON
+        function onTestComplete(testResults, testInfo) {
+            const total = testResults.length;
+            const passed = testResults.filter(r => r.status === 'success').length;
+            const failed = testResults.filter(r => r.status === 'failed').length;
+            const successRate = total > 0 ? ((passed / total) * 100).toFixed(1) : 0;
+            
+            const osVersion = testInfo.operatingSystem === 'android' ? 
+                testInfo.androidVersion : testInfo.iosVersion;
+
+            const testData = {
+                testerName: testInfo.testerName,
+                deviceModel: testInfo.deviceModel,
+                operatingSystem: testInfo.operatingSystem,
+                osVersion: osVersion,
+                template: testInfo.template,
+                totalTests: total,
+                passedTests: passed,
+                failedTests: failed,
+                successRate: successRate + '%',
+                results: testResults,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Netlify'a gönder
+            submitToNetlify(testData);
+        }
+
+        // Finish Test butonuna event listener ekle
+        // Önceki finishTestBtn event listener'ını güncelle:
+        finishTestBtn.addEventListener('click', function() {
+            testInfo.endTime = new Date().toLocaleString('tr-TR');
+            
+            // Test verilerini gönder
+            onTestComplete(testResults, testInfo);
+            
+            // Sonuçları göster
+            testSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+            displayResults();
+        });
+
+        // NETLIFY FORM VERİLERİNİ GÖRMEK İÇIN:
+        // 1. Netlify Dashboard -> Forms -> test-results
+        // 2. Tüm verileri görüntüle ve CSV olarak indir
+
+    </script>
+
+    <!-- ÖNCEKI TÜM JAVASCRIPT KODLARI BURAYA EKLE -->
+    <!-- Test şablonları, DOM elementleri, test işlevleri vb. -->
+
+</body>
+</html>
