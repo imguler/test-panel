@@ -1,25 +1,4 @@
 // dashboard.js
-// Test sonuçlarını localStorage'a kaydet
-function saveTestResult(screenshotData = null) {
-    const testResults = JSON.parse(localStorage.getItem('testResults') || '[]');
-    
-    const result = {
-        id: Date.now(),
-        timestamp: new Date().toLocaleString('tr-TR'),
-        tests: {
-            html: document.getElementById('html-status')?.textContent || 'Test edilmedi',
-            css: document.getElementById('css-status')?.textContent || 'Test edilmedi',
-            js: document.getElementById('js-status')?.textContent || 'Test edilmedi',
-            images: document.getElementById('images-status')?.textContent || 'Test edilmedi',
-            links: document.getElementById('links-status')?.textContent || 'Test edilmedi'
-        },
-        screenshot: screenshotData,
-        errors: window.testErrors || []
-    };
-    
-    testResults.unshift(result); // En yeni başa ekle
-    localStorage.setItem('testResults', JSON.stringify(testResults));
-}
 
 // Dashboard'u yükle
 function loadDashboard() {
@@ -34,12 +13,15 @@ function displayStats(results) {
     
     const totalTests = results.length;
     const successfulTests = results.filter(r => 
-        Object.values(r.tests).every(status => status.includes('✓ Başarılı') || status.includes('✓'))
+        r.tests && parseInt(r.tests.failed) === 0
     ).length;
     
-    const totalErrors = results.reduce((sum, r) => sum + r.errors.length, 0);
-    const lastTest = results[0] ? new Date(results[0].id).toLocaleDateString('tr-TR') : 'Henüz yok';
+    const totalErrors = results.reduce((sum, r) => {
+        return sum + (r.errors ? r.errors.length : 0);
+    }, 0);
     
+    const lastTest = results[0] ? new Date(results[0].id).toLocaleDateString('tr-TR') : 'Henüz yok';
+
     statsContainer.innerHTML = `
         <div class="stat-card">
             <h3>Toplam Test</h3>
@@ -70,20 +52,28 @@ function displayResults(results) {
     }
     
     resultsContainer.innerHTML = results.map(result => `
-        <div class="result-item ${result.errors.length > 0 ? 'failed' : ''}">
+        <div class="result-item ${result.errors && result.errors.length > 0 ? 'failed' : ''}">
             <div class="result-header">
                 <strong>Test Tarihi:</strong> ${result.timestamp}
                 <span style="float: right;">
-                    ${result.errors.length > 0 ? '❌ Hatalı' : '✅ Başarılı'}
+                    ${result.errors && result.errors.length > 0 ? '❌ Hatalı' : '✅ Başarılı'}
                 </span>
             </div>
             
             <div class="test-status" style="margin: 10px 0;">
-                ${Object.entries(result.tests).map(([key, value]) => `
-                    <span style="margin-right: 15px;">
-                        ${key.toUpperCase()}: <strong>${value}</strong>
-                    </span>
-                `).join('')}
+                <strong>Test Bilgileri:</strong><br>
+                Testi Yapan: ${result.testerInfo?.name || 'Bilinmiyor'}<br>
+                Cihaz: ${result.testerInfo?.device || 'Bilinmiyor'}<br>
+                İşletim Sistemi: ${result.testerInfo?.os || 'Bilinmiyor'}<br>
+                Şablon: ${result.testerInfo?.template || 'Bilinmiyor'}
+            </div>
+            
+            <div class="test-status" style="margin: 10px 0;">
+                <strong>Sonuçlar:</strong><br>
+                Toplam Test: ${result.tests?.total || 0}<br>
+                Başarılı: ${result.tests?.passed || 0}<br>
+                Başarısız: ${result.tests?.failed || 0}<br>
+                Başarı Oranı: ${result.tests?.successRate || '0%'}
             </div>
             
             ${result.screenshot ? `
@@ -94,7 +84,7 @@ function displayResults(results) {
                 </div>
             ` : ''}
             
-            ${result.errors.length > 0 ? `
+            ${result.errors && result.errors.length > 0 ? `
                 <div class="error-details">
                     <strong>Hatalar:</strong><br>
                     ${result.errors.map(error => `• ${error}`).join('<br>')}
